@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 리스트</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>상품 리스트</h2>
+    <form th:action="@{/itemTable}">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">검색</span>
+            </div>
+            <select name="searchType" class="form-control" id="sel1" onchange="checkSelectOption(this)">
+                <option value="0">검색옵션</option>
+                <option value="1" th:selected="${param.searchType != null && param.searchType.contains('1')}">품목명</option>
+                <option value="2" th:selected="${param.searchType != null && param.searchType.contains('2')}">제조사</option>
+            </select>
+
+            <input name="searchValue" type="text" class="form-control" placeholder="검색어를 입력하세요." th:value="${param.searchValue}" autofocus>
+            <button class="btn btn-primary" type="submit">검색</button>
+            <a class="btn btn-light" type="button" href="/itemTable">전체목록</a>
+        </div>
+    </form>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>idx</th>
+            <th>품목명</th>
+            <th>정가</th>
+            <th>할인가</th>
+            <th>종류</th>
+            <th>제조사</th>
+            <th>재고</th>
+        </tr>
+        </thead>
+        <tbody th:each="item : ${itemDTOList}">
+        <tr>
+            <td th:text="${item.no}"></td> <!-- getNo을 사용하지 않아도 자동으로 사용한다 -->
+            <td th:text="${item.itemName}"></td>
+            <td>
+                <strong th:if="${item.discountYn.equals('N')}" th:text="${item.price}"></strong>
+                <span th:unless="${item.discountYn.equals('N')}" th:text="${item.price}"></span>
+            </td>
+            <td>
+                <strong th:if="${item.discountYn.equals('Y')}" th:text="${item.discountPrice}"></strong>
+                <span th:unless="${item.discountYn.equals('Y')}" th:text="${item.discountPrice}"></span>
+            </td>
+            <td th:text="${item.productKindName}"></td>
+            <td th:text="${item.productMakerName}"></td>
+            <td th:text="${item.stock}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:inline="javascript">
+    const checkSelectOption = (data) =>{
+        if (data.value == '0'){
+            console.log(document.getElementsByName('searchValue').item(0).value);
+            document.getElementsByName('searchValue').item(0).value = '';
+        }
+    }
+
+</script>
+</body>
+</html>
