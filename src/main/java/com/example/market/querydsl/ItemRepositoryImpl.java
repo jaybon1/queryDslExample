@@ -43,7 +43,8 @@ public class ItemRepositoryImpl implements ItemCustomRepository {
                     JPAExpressions // 스칼라 서브쿼리
                         .select(productKindEntity.kindName)
                         .from(productKindEntity)
-                        .where(productKindEntity.idx.eq(itemEntity.productKind)), productMakerEntity.makerName,
+                        .where(productKindEntity.idx.eq(itemEntity.productKind)),
+                    productMakerEntity.makerName,
                     itemEntity.stock
                 ))
                 .from(itemEntity) // 기준 테이블
@@ -60,7 +61,7 @@ public class ItemRepositoryImpl implements ItemCustomRepository {
 
         BooleanExpression n = itemEntity.itemName.isNotEmpty();
 
-        // 주의 productKindEntity처럼 서브쿼리로 쓰인 테이블은 조건에 넣으면 안된다.
+        // 주의 productKindEntity처럼 기준테이블이나 조인에 쓰이지 않은 테이블은 조건에 넣으면 안된다.
         if (searchType == 1){
             n = n.and(itemEntity.itemName.contains(searchValue));
         } else if (searchType == 2){

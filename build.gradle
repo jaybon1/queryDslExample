@@ -17,7 +17,7 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven { url "https://plugins.gradle.org/m2/" } // 플러그인 저장소
+//	maven { url "https://plugins.gradle.org/m2/" } // 플러그인 저장소
 }
 
 dependencies {
@@ -58,8 +58,12 @@ configurations {
 }
 
 compileQuerydsl {
+//	doFirst {
+//		delete "$buildDir"
+//	}
+// 위 코드가 되지 않으면 아래코드로 해보세요
 	doFirst {
-		delete "$buildDir"
+		delete "$buildDir/generated/querydsl/com"
 	}
 	options.annotationProcessorPath = configurations.querydsl
 }
